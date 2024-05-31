@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -32,6 +33,17 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(movement * speed); // Apply force to the Rigidbody to move the player
     }
 
+    void Update() // Called once per frame
+    {
+        if (health == 0)
+        {
+            Debug.Log("Game Over!");
+            SceneManager.LoadScene("maze");
+            score = 0;
+            health = 5;
+        }
+    }
+
     void OnTriggerEnter(Collider other) // Called when player colides with trigger item
     {
         
@@ -43,10 +55,15 @@ public class PlayerController : MonoBehaviour
             Debug.Log($"Score: {score}"); // Print updated score to console
         }
 
-        if (other.gameObject.CompareTag("Trap"))
+        if (other.gameObject.CompareTag("Trap")) // Checks for Trap tag
         {
-            health--;
-            Debug.Log($"Health: {health}");
+            health--; // Decrement health
+            Debug.Log($"Health: {health}"); // Print new health
+        }
+
+        if (other.gameObject.CompareTag("Goal")) // Checks for Goal tag
+        {
+            Debug.Log("You win!"); // Prints victory message
         }
     }
 }
